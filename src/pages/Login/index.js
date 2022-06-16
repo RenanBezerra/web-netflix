@@ -1,7 +1,33 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "../../components/Header";
 
+import api from "../../services/api";
+
 const Login = () => {
+  const [credenciais, setCredenciais] = useState({
+    email: "",
+    senha: "",
+  });
+
+  const login = async () => {
+    try {
+      const response = await api.post("/usuario/login", credenciais);
+      const res = response.data;
+
+      console.log(res);
+      if (res.error) {
+        alert(res.message);
+
+        return false;
+      }
+
+      localStorage.setItem("@user", JSON.stringify(res.usuario));
+      window.location.reload();
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
   return (
     <div
       class="container-fluid bg_filmes"
@@ -10,24 +36,39 @@ const Login = () => {
         height: "100%",
       }}
     >
-      <Header />
+      <Header hideMenu />
+
       <div id="caixa_login" class="col-4 offset-4">
         <h1 class="text-white">Entrar</h1>
         <br />
-        <form>
+        <>
           <input
             type="email"
             class="form-control form-control-lg"
             placeholder="Email ou numero de telefone"
+            onChange={(e) => {
+              setCredenciais({
+                ...credenciais,
+                email: e.target.value,
+              });
+            }}
           />
           <br />
           <input
-            type="email"
+            type="password"
             class="form-control form-control-lg"
             placeholder="Senha"
+            onChange={(e) => {
+              setCredenciais({
+                ...credenciais,
+                senha: e.target.value,
+              });
+            }}
           />
           <br />
-          <button class="btn btn-lg btn-block btn-danger">Entrar</button>
+          <button class="btn btn-lg btn-block btn-danger" onClick={login}>
+            Entrar
+          </button>
           <div class="row mt-4">
             <div class="col text-muted">
               <input type="checkbox" /> Lembrar de mim.
@@ -38,7 +79,7 @@ const Login = () => {
               </a>
             </div>
           </div>
-        </form>
+        </>
       </div>
     </div>
   );
