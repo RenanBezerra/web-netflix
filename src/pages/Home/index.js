@@ -4,7 +4,35 @@ import Header from "../../components/Header";
 import Hero from "../../components/Hero";
 import Secao from "../../components/Secao";
 
-const Home = () => {
+import api from "../../services/api";
+
+const Home = async () => {
+  const [principal, setPrincipal] = useState({});
+  const [secoes, setSecoes] = useState([]);
+
+  const getHome = async () => {
+    try {
+      const response = await api.get("/home");
+      const res = response.data;
+
+      if (res.error) {
+        alert(res.message);
+        return false;
+      }
+
+      console.log(res);
+
+      setPrincipal(res.principal);
+      setSecoes(res.secoes);
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  useEffect(() => {
+    getHome();
+  }, []);
+
   return (
     <>
       <ModalFilme />
@@ -13,10 +41,12 @@ const Home = () => {
         <Header />
       </div>
 
-      <Hero />
+      <Hero filme={principal} />
 
       <div id="main-content">
-        <Secao />
+        {secoes.map((secao) => (
+          <Secao secao={secao} />
+        ))}
       </div>
     </>
   );

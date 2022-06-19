@@ -81,7 +81,6 @@ header img {
 
 #hero {
     height: 700px;
-    background-image: url(../assets/hero.png);
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;

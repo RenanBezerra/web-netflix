@@ -38,13 +38,12 @@ const Header = ({ hideMenu }) => {
           </ul>
         </div>
       )}
-      {!hideMenu && (
-        <div className="col-2 text-right">
-          <a onClick={logout} className="text-white">
-            Olá {user?.nome}, Sair
-          </a>
-        </div>
-      )}
+
+      <div className="col-2 text-right">
+        <a onClick={logout} className="text-white">
+          Olá Sair
+        </a>
+      </div>
     </header>
   );
 };

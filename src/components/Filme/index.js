@@ -1,9 +1,9 @@
 import React from "react";
 
-const Filme = () => {
+const Filme = ({ filme }) => {
   return (
     <li class="filme" data-toggle="modal" data-target="#modal-filme">
-      <img class="img-fluid" src="https://i.imgur.com/lOnb2zZ.jpg" />
+      <img class="img-fluid" src={filme.thumb} />
       <div class="filme_info">
         <div class="col-12">
           <a href="#" class="btn-custom-round btn btn-light rounded-circle">

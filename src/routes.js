@@ -11,7 +11,7 @@ const Routes = () => {
     <BrowserRouter>
       <Switch>
         {!logado && <Route path="/" exact component={Login} />}
-        {logado && <Route path="/" exact component={Home} />}
+        <Route path="/home" exact component={Home} />
       </Switch>
     </BrowserRouter>
   );

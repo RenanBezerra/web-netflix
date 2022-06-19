@@ -14,12 +14,12 @@ const Login = () => {
       const response = await api.post("/usuario/login", credenciais);
       const res = response.data;
 
-      console.log(res);
       if (res.error) {
         alert(res.message);
 
         return false;
       }
+      console.log(res);
 
       localStorage.setItem("@user", JSON.stringify(res.usuario));
       window.location.reload();
