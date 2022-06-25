@@ -1,8 +1,21 @@
 import React from "react";
 
 const Filme = ({ filme }) => {
+  const selectFilme = () => {
+    const event = new CustomEvent("selectFilme", {
+      detail: filme,
+    });
+
+    window.dispatchEvent(event);
+  };
+
   return (
-    <li class="filme" data-toggle="modal" data-target="#modal-filme">
+    <li
+      class="filme"
+      onClick={selectFilme}
+      data-toggle="modal"
+      data-target="#modal-filme"
+    >
       <img class="img-fluid" src={filme.thumb} />
       <div class="filme_info">
         <div class="col-12">

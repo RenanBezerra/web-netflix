@@ -1,14 +1,54 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Episodeo from "../Episodeo";
+import api from "../../services/api";
 
 const ModalFilme = () => {
+  const [filme, setFilme] = useState({});
+  const [episodeos, setEpisodeos] = useState([]);
+
+  const selectFilmeListener = () => {
+    window.addEventListener("selectFilme", (data) => {
+      console.log(data.detail);
+      setFilme(data.detail);
+    });
+  };
+
+  const getEpisodeos = async (temporada_id) => {
+    try {
+      const response = await api.get(`/episodeo/temporada/${temporada_id}`);
+      const res = response.data;
+
+      if (res.error) {
+        alert(res.message);
+        return false;
+      }
+
+      setEpisodeos(res.episodeos);
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  useEffect(() => {
+    selectFilmeListener();
+  }, []);
+
+  useEffect(() => {
+    if (filme.tipo == "serie") {
+      getEpisodeos(filme.temporadas[0]?._id);
+    }
+  }, [filme]);
+
   return (
     <div class="modal fade" id="modal-filme">
       <div class="modal-dialog">
         <div class="modal-content">
-          <div class="modal-hero">
-            <img src={require("../../assets/logo_2.png")} />
-            <div class="col-12 modal-hero-infos"></div>
+          <div
+            class="modal-hero"
+            style={{ backgroundImage: `url(${filme.capa})` }}
+          >
+            <img src={filme.logo} />
+            <div class="modal-hero-infos"></div>
             <button class="btn btn-lg btn-custom-white">
               <span class="mdi mdi-play"></span> Assistir
             </button>
@@ -35,45 +75,54 @@ const ModalFilme = () => {
             <div class="container">
               <div class="row">
                 <div class="col-7">
-                  <p class="filme_descricao">
-                    Pregadores Profanos. Autoridades Corruptas. Amantes
-                    Assassinos. Numa cidade cheia de pecadores, um jovem busca
-                    justiça
-                  </p>
+                  <p class="filme_descricao">{filme.descricao}</p>
                 </div>
                 <div class="col-5">
                   <p class="filme_elenco">
                     Elenco:
-                    <text>
-                      Renan Bezerra, Thaila Abrantes, Silvio Sampaio, Juliana
-                      Righi,Omar Sampaio, Marcia Alves
-                    </text>
+                    <text> {filme.elenco?.join(", ")}</text>
                     <br />
                     <br />
-                    Generos: <text>Ação, Aventura, Dramatico.</text>
+                    Generos: <text>{filme.generos?.join(", ")}</text>
                     <br />
                     <br />
-                    Cenas e momentos: <text>Violentos</text>
+                    Cenas e momentos:{" "}
+                    <text>{filme.cenas_momentos?.join(", ")}</text>
                   </p>
                 </div>
               </div>
               <br />
-              <div class="row">
-                <div class="col-7">
-                  <h3 class="text-white">Episodeos</h3>
-                </div>
-                <div class="col-5 text-right">
-                  <select class="form-control">
-                    <option>Temporada 1</option>
-                  </select>
-                </div>
-              </div>
-              <br />
-              <div class="row">
-                <ul id="lista_episodeos">
-                  <Episodeo />
-                </ul>
-              </div>
+              {filme.tipo == "serie" && (
+                <>
+                  <div class="row">
+                    <div class="col-7">
+                      <h3 class="text-white">Episodeos</h3>
+                    </div>
+                    <div class="col-5 text-right">
+                      <select
+                        onChange={(e) => {
+                          getEpisodeos(e.target.value);
+                        }}
+                        class="form-control"
+                      >
+                        {filme.temporadas?.map((temporada) => (
+                          <option value={temporada._id}>
+                            {temporada.titulo}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                  <br />
+                  <div class="row">
+                    <ul id="lista_episodeos">
+                      {episodeos.map((episodeo) => (
+                        <Episodeo episodeo={episodeo} />
+                      ))}
+                    </ul>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
