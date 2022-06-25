@@ -6,7 +6,7 @@ import Secao from "../../components/Secao";
 
 import api from "../../services/api";
 
-const Home = async () => {
+const Home = () => {
   const [principal, setPrincipal] = useState({});
   const [secoes, setSecoes] = useState([]);
 
